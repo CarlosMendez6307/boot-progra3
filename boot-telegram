@@ -1,0 +1,66 @@
+public class Bot extends TelegramLongPollingBot {
+
+    private List<String> mensajes = new ArrayList<>();
+
+    @Override
+    public String getBotUsername() {
+        return "p3ruldin";
+    }
+
+    @Override
+    public String getBotToken() {
+        return "poner el token";
+    }
+
+    
+    //aquí se recibe el mensaje
+    @Override
+    public void onUpdateReceived(Update update) {
+        //System.out.println(update);
+        var usuario = update.getMessage().getFrom();
+        var mensaje = update.getMessage().getText();
+        var id = usuario.getId();
+        
+        mensajes.add(usuario+":"+mensaje);
+
+        System.out.println("id:" +usuario.getId()+"  nombre:"+   usuario.getFirstName() + " " +
+                usuario.getLastName() + " escribió: " + mensaje);
+
+        
+        if (mensaje.contains("/desplegar")&& mensajes.size() > 0){
+            String lista = "";
+            for (String mensaje1 : mensajes) {
+                lista += mensaje1 + "\n";
+            }
+            sendText(id, lista);
+           
+        }
+        
+
+//        sendText(1193346445L,"Mensaje Personalizado para:"+usuario.getFirstName()+" "+mensaje);
+//        sendText(2027129090L,"Mensaje Personalizado para:"+usuario.getFirstName()+" "+mensaje);
+//        sendText(1216007651L,"Mensaje Personalizado para:"+usuario.getFirstName()+" "+mensaje);
+//        sendText(6133231206L,"Mensaje Personalizado para:"+usuario.getFirstName()+" "+mensaje);
+//        sendText(6133231206L,"Mensaje Personalizado para:"+usuario.getFirstName()+" "+mensaje);
+//        sendText(5199418040L,"Mensaje Personalizado para:"+usuario.getFirstName()+" "+mensaje);
+//        sendText(6133231206L,"Mensaje Personalizado para:"+usuario.getFirstName()+" "+mensaje);
+//        sendText(2027129090L,"Mensaje Personalizado para:"+usuario.getFirstName()+" "+mensaje);
+
+
+
+
+        //sendText(id, mensaje);
+
+    }
+
+    public void sendText(Long who, String what){
+        SendMessage sm = SendMessage.builder()
+                .chatId(who.toString()) //quien manda el mensaje
+                .text(what).build();    //Contenido del mensaje
+        try {
+            execute(sm);                        //Actually sending the message
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);      //Any error will be printed here
+        }
+    }
+}
